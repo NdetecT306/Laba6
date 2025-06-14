@@ -3,7 +3,7 @@
 #include <random>
 #include <chrono>
 #include <algorithm>
-#include <clocale> // Для setlocale
+#include <clocale> 
 #include <sstream>
 using namespace std;
 int RandomNumbers(int start, int end) {
@@ -17,7 +17,7 @@ int RandomNumbers(int start, int end) {
 int** Matrix(int m, int n, int start, int end) {
     int** a;
     a = new int* [m];
-    for (int i = 0; i < m; i++) a[i] = new int[n]; // Исправлено: n, а не m
+    for (int i = 0; i < m; i++) a[i] = new int[n]; 
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n;j++) {
             a[i][j] = RandomNumbers(start, end);
@@ -48,39 +48,25 @@ vector<int> longestIncreasingSequence(int* a, int n) {
 bool isValid(int row, int col, int str3, int stb3) {
     return (row >= 0 && row < str3 && col >= 0 && col < stb3);
 }
-
-// Функция для рекурсивного поиска слова в матрице
 bool findWord(char** matrix, const string& word, int row, int col, int wordIndex, int str3, int stb3, bool** visited) {
-    // Если слово полностью найдено, возвращаем true
     if (wordIndex == word.length()) {
         return true;
     }
-
-    // Если текущая позиция не валидна или символ не соответствует, возвращаем false
     if (!isValid(row, col, str3, stb3) || matrix[row][col] != word[wordIndex] || visited[row][col]) {
         return false;
     }
-
-    // Помечаем текущую ячейку как посещенную
     visited[row][col] = true;
-
-    // Рекурсивно ищем дальше во всех четырех направлениях
     bool found = findWord(matrix, word, row + 1, col, wordIndex + 1, str3, stb3, visited) ||
         findWord(matrix, word, row - 1, col, wordIndex + 1, str3, stb3, visited) ||
         findWord(matrix, word, row, col + 1, wordIndex + 1, str3, stb3, visited) ||
         findWord(matrix, word, row, col - 1, wordIndex + 1, str3, stb3, visited);
-
-    // Если слово не найдено, снимаем метку посещения (backtracking)
     if (!found) {
         visited[row][col] = false;
     }
-
     return found;
 }
-int main()
-{
+int main() {
     setlocale(LC_ALL, "rus");
-    /*
     int m1, n1, start1 = -50, end1 = 50;
     cout << "Введите количество строк: ";
     cin >> m1;
@@ -153,7 +139,6 @@ int main()
         delete[] b[i];
     }
     delete[] b;
-    */
     int str3, stb3;
     cout << "Введите количество строк: ";
     cin >> str3;
@@ -163,56 +148,37 @@ int main()
     for (int i = 0; i < str3; ++i) {
         matrix[i] = new char[stb3];
     }
-
-    // Создаем матрицу для отслеживания посещенных ячеек
     bool** visited = new bool* [str3];
     for (int i = 0; i < str3; ++i) {
         visited[i] = new bool[stb3];
         for (int j = 0; j < stb3; ++j) {
-            visited[i][j] = false; // Инициализируем все ячейки как непосещенные
+            visited[i][j] = false; 
         }
     }
-
-    // Заполняем матрицу
     cout << "Введите элементы матрицы:" << endl;
     for (int i = 0; i < str3; ++i) {
         for (int j = 0; j < stb3; ++j) {
             cin >> matrix[i][j];
         }
     }
-    cout << "Введенная матрица:" << endl;
-    for (int i = 0; i < str3; ++i) {
-        for (int j = 0; j < stb3; ++j) {
-            cout << matrix[i][j] << " ";
-        }
-        cout << endl;
-    }
-    // Вводим слово
     string word;
     cout << "Введите слово: ";
     cin >> word;
-
-    // Проверяем длину слова
     if (word.length() > str3 * stb3) {
         cout << "false" << endl;
-        // Освобождаем память, выделенную для матрицы
         for (int i = 0; i < str3; ++i) {
             delete[] matrix[i];
         }
         delete[] matrix;
-
-        // Освобождаем память, выделенную для visited
         for (int i = 0; i < str3; ++i) {
             delete[] visited[i];
         }
         delete[] visited;
         return 0;
     }
-    // Ищем слово в матрице
     bool found = false;
     for (int i = 0; i < str3; ++i) {
         for (int j = 0; j < stb3; ++j) {
-            //  Сбрасываем состояние visited для каждой новой стартовой позиции
             for (int r = 0; r < str3; ++r) {
                 for (int c = 0; c < stb3; ++c) {
                     visited[r][c] = false;
@@ -220,15 +186,19 @@ int main()
             }
             if (findWord(matrix, word, i, j, 0, str3, stb3, visited)) {
                 found = true;
-                break; // Выходим из внутреннего цикла, если слово найдено
+                break;
             }
         }
-        if (found) {
-            break; // Выходим из внешнего цикла, если слово найдено
-        }
+        if (found) break;
     }
-
-    // Выводим результат
     cout << (found ? "true" : "false") << endl;
+    for (int i = 0; i < str3; ++i) {
+        delete[] matrix[i];
+    }
+    delete[] matrix;
+    for (int i = 0; i < str3; ++i) {
+        delete[] visited[i];
+    }
+    delete[] visited;
     return 0;
 }
