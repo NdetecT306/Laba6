@@ -2,8 +2,7 @@
 #include <vector>
 #include <algorithm>
 using namespace std;
-int BinNumber(int Number)
-{
+int BinNumber(int Number){
     if (Number == 0) return 0;
     int ones = 0;
     while (Number){
@@ -46,4 +45,3 @@ int main(){
     cout << needCombo.first << " " << needCombo.second << endl;
     return 0;
 }
-
